@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Java 8 by Adam Szecowka</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/adam.css">
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+		
+
+		<!-- For syntax highlighting -->
+
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Java 8</h1>
+					
+					<p>
+						<small>by Adam Szecowka</small>
+					</p>
+				</section>
+				
+				<section>
+					<h2>What is new in Java 8</h2>
+					<ul>
+						<li>lambda expressions <span class="wazne">*</span></li>
+						<li>method references  <span class="wazne">*</span></li>
+						<li>Streams API  <span class="wazne">*</span></li>
+						<li>default methods  <span class="wazne">*</span></li>
+						<li>Optional</li>
+						<li>New Date and Time API</li>
+					</ul>
+				</section>
+                <section>
+                    <h4>Behaviour parametrization prior to Java 8</h4>
+                </section>
+				<section>
+
+
+					<section>
+					<h5>Filter by color</h5>
+					<pre>
+					<code data-trim data-noescape>
+					       public static List&lt;Apple&gt; filterApplesByColour(List&lt;Apple&gt; inventory, String color) {
+        List&lt;Apple&gt; result = new ArrayList&lt;&gt;();
+        for (Apple apple : inventory) {
+            <span class="wazne_kod">if (apple.getColor().equals(color)) {</span>
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+						
+					</code>	
+					</pre>
+					<h5>Filter by weight</h5>
+					<pre>
+						<code data-trim data-noescape>
+						    public static List&lt;Apple&gt; filterApplesByWeight(List&lt;Apple&gt; inventory, int weight) {
+        List&lt;Apple&gt; result = new ArrayList&lt;&gt;();
+        for (Apple apple : inventory) {
+           <span class="wazne_kod"> if (apple.getWeight() &gt; weight) {</span>
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+						</code>
+					</pre>
+					</section>
+					<section>
+					<h5>Lets introduce interface</h5>
+					<pre>
+						<code data-trim data-noescape>
+						    public interface ApplePredicate{
+        boolean test (Apple apple);
+    }
+
+    public class AppleWeightPredicate implements ApplePredicate{
+        public boolean test(Apple apple){
+            return apple.getWeight() &gt; 150;
+        }
+    }
+    public class AppleColorPredicate implements ApplePredicate{
+        public boolean test(Apple apple){
+            return &quot;green&quot;.equals(apple.getColor());
+        }
+    }
+						</code>
+
+					</pre>
+					</section>
+					<section>
+						<h5>And refactor filter method</h5>
+						<pre>
+						<code data-trim data-noescape>
+						    public static List&lt;Apple&gt; filterApples(List&lt;Apple&gt; inventory, ApplePredicate p) {
+        List&lt;Apple&gt; result = new ArrayList&lt;&gt;();
+        for (Apple apple : inventory) {
+            if (p.test(apple)) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+						</code>
+						</pre>
+					</section>
+					<section>
+						<h5>Usages</h5>
+						<pre>
+						<code data-trim data-noescape>
+						    public static void main(String[] args) {
+        List&lt;Apple&gt; inventory = ...
+        List&lt;Apple&gt; redApples = filterApples(inventory, new ApplePredicate() {
+            public boolean test(Apple apple) {
+                return &quot;red&quot;.equals(apple.getColor());
+            }
+        });
+
+        List&lt;Apple&gt; heavierThan150g =
+                filterApples(inventory, new AppleWeightPredicate());
+        List&lt;Apple&gt; greenApples =
+                filterApples(inventory, new AppleColorPredicate());
+
+    }
+						</code>
+						</pre>
+					</section>
+				</section>
+				<section>
+					<h4>Behaviour parametrization in Java 8</h4>
+                    <h5>Lambda expression</h5>
+					<pre>
+						<code data-trim data-noescape>
+					        List&lt;Apple&gt; result =
+                filterApples(inventory, (Apple apple) -&gt; &quot;red&quot;.equals(apple.getColor()));
+					</code></pre>
+					<p>and could be even conciser... </p>
+				</section>
+				<section>
+					<h4>Behaviour parametrization in Java 8</h4>
+					<h5>Another real-world example</h5>
+					before
+							<pre>
+							<code data-trim data-noescape>inventory.sort(new Comparator&lt;Apple&gt;() {
+            public int compare(Apple a1, Apple a2){
+                return a1.getWeight().compareTo(a2.getWeight());
+            }
+        });
+							</code>
+							</pre>
+						after
+						<pre>
+							<code data-trim data-noescape>
+							  inventory.sort((Apple a1, Apple a2) -&gt; a1.getWeight()
+				.compareTo(a2.getWeight()));
+							</code>
+							</pre>
+
+				</section>
+				<section>
+					<h4>Lambda expression -theory</h4>
+					<p>
+					<ul>
+						<li>a kind of anonymous function</li>
+						<li>can be passed around</li>
+						<li>without name</li>
+						<li>but has a body, a return type, and also possibly a list of exceptions that can be
+                            thrown</li>
+					</ul>
+					<br>
+					<blockquote>
+					Lambdas do not let you do anything that you couldn't prior to Java 8. However, you no longer have to write
+					clumsy code using anonymous classes to benefit from behavior parametrization
+					</blockquote>
+					</p>
+				</section>
+				<section>
+					<h4>Syntax of lambda</h4>
+
+
+                    <table class="pict_lambda_syntax">
+                        <tr>
+                            <td><code>(Apple a1, Apple a2)</code></td>
+                            <td><code>-></code></td>
+                            <td><code>a1.getWeight().compareTo(a2.getWeight()));</code></td>
+                        </tr>
+                        <tr>
+                            <td class="desc1">lambda parameters</td>
+                            <td class="desc2">arrow</td>
+                            <td class="desc3">lambda body</td>
+                        </tr>
+
+                    </table>
+
+
+                    <h4>
+                    Two flavours of lambda:
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <code>
+                                (parameters) -> expression
+                            </code><br>
+							<!--
+                            <code  data-trim data-noescape>
+                                TODO PRZYKLAD
+                            </code>
+							-->
+
+                        </li>
+
+                        <li>
+                           <code>
+                               (parameters) -> {statements;}
+                           </code><br>
+						   <!--
+                           <code  data-trim data-noescape>
+                               TODO przyklad
+                           </code>
+						   -->
+                        </li>
+                    </ul>
+
+
+
+
+				</section>
+                <section>
+                    <h4>Functional interface</h4>
+                    <ul>
+                        <li>The type of a lambda expression is essentially a functional interface</li>
+                        <li>A functional interface is an interface that specifies exactly one (abstract) method
+                        </li>
+                        <li>
+                            Lambda expressions let you provide the
+                            implementation of the abstract method of a functional interface directly inline and treat the
+                            whole expression as an instance of a functional interface
+
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>What about <code>@FunctionalInterface</code>?</h4>
+                    <ul>
+                        <li>indicate the interface is intended to be a functional
+                            interface.
+                        </li>
+                        <li>
+                            The compiler will return a meaningful error if you define an interface  using the
+                            <code>@FunctionalInterface</code> annotation and it isn’t a functional interface
+                            <br>
+                            <samp>Example: multiple non-overriding abstract methods found in interface Foo</samp>
+
+                        </li>
+                        <li><code>@FunctionalInterface</code> is not obligatory</li>
+                    </ul>
+                </section>
+
+            <section>
+                <section>
+                    <h4><code>java.util.function</code> package</h4>
+
+                    <p>We don't have to create own ApplePredicate</p>
+
+                    <pre>
+                    <code data-trim data-noescape>
+public interface ApplePredicate{
+    boolean test (Apple apple);
+}
+                    </code>
+                    </pre>
+                    <p><code>java.util.function</code> package contains ~<span style="font-size: 2em;">46</span> interfaces. Let's go through all of
+                        them :)</p>
+                </section>
+                <section>
+                    <h4><code>java.util.function</code> package</h4>
+                    <h5>Predicate</h5>
+                    <pre>
+                        <code data-trim data-noescape>
+@FunctionalInterface
+public interface Predicate&lt;T&gt; {
+    /**
+    * Evaluates this predicate on the given argument.
+    *
+    * @param t the input argument
+    * @return {@code true} if the input argument matches the predicate,
+    * otherwise {@code false}
+    */
+    boolean test(T t);
+    // other default methods
+}
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h4><code>java.util.function</code> package</h4>
+                    <h5>Consumer</h5>
+                    <pre>
+                        <code  data-trim data-noescape>
+@FunctionalInterface
+public interface Consumer&lt;T&gt; {
+    /**
+    * Performs this operation on the given argument.
+    *
+    * @param t the input argument
+    */
+    void accept(T t);
+    // other default methods
+}
+
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h4><code>java.util.function</code> package</h4>
+                    <h5>Function</h5>
+                    <pre>
+                        <code data-trim data-noescape>
+@FunctionalInterface
+public interface Function&lt;T, R&gt; {
+
+    /**
+    * Applies this function to the given argument.
+    *
+    * @param t the function argument
+    * @return the function result
+    */
+    R apply(T t);
+    //default methods ...
+}
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                    <h4><code>java.util.function</code> package</h4>
+                    <h5>Primitive specialization</h5>
+                    <ul><li>Why? - Performance</li></ul>
+                    <br/>
+
+                        <table class="with_border">
+                            <tr>
+                                <td>Functional Interface</td>
+                                <td>Primitive specializations</td>
+                            </tr>
+                            <tr>
+                                <td><code>Predicate&lt;T&gt;</code> </td>
+                                <td><code>IntPredicate</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Consumer&lt;T&gt;</code></td>
+                                <td><code>IntConsumer</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Function&lt;T,R&gt;</code></td>
+                                <td><code>IntFunction</code>, <code>IntToLongFunction</code>,
+                                    <code>IntToDoubleFunction</code>,
+                                    <code>ToIntFunction</code></td>
+                            </tr>
+                        </table>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h4>Method references</h4>
+                    Lambda:
+                    <pre>
+                        <code>
+filterApples(inventory, apple -> apple.isOrganic());
+                        </code>
+                    </pre>
+                    Method reference:
+                    <pre>
+                        <code>
+filterApples(inventory, Apple::isOrganic);
+
+                        </code>
+                    </pre>
+                    <ul>
+                        <li>Method references can be seen as a syntactic sugar for lambdas that refer only to a single
+                            method because you have to write less to express the same thing</li>
+                        <li>In some cases they can look more readable and feel more natural than using lambda
+                            expressions</li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Method reference - another example</h4>
+                    Lambda:
+                <pre>
+                    <code data-trim data-noescape>
+                        inventory.sort((Apple a1, Apple a2)
+                        -> a1.getWeight().compareTo(a2.getWeight()));
+                    </code>
+                </pre>
+                    Method reference:
+                <pre>
+                    <code data-trim data-noescape>
+                        inventory.sort(comparing(Apple::getWeight));
+                    </code>
+                </pre>
+
+                </section>
+                <section>
+                    <h4>Method references</h4>
+                    <ol>
+                        <li>A method reference to a static method
+                            <table class="with_border">
+                                <tr>
+                                    <td>lambda</td>
+                                    <td><code>(args) -&gt; ClassName.staticMethod(args) </code></td>
+                                    <td><code>(a) -> Integer.parseInt(a)</code></td>
+                                </tr>
+                                <tr>
+                                    <td>method ref.</td>
+                                    <td><code>ClassName::staticMethod</code></td>
+                                    <td><code>Integer::parseInt</code></td>
+                                </tr>
+                            </table>
+                        </li>
+                        <li>A method reference to an instance method of an arbitrary type
+                            <table class="with_border">
+                                <tr>
+                                    <td>lambda</td>
+                                    <td><code>(arg0, rest) -&gt; arg0.instanceMethod(rest)</code></td>
+                                    <td><code>a -&gt; a.length() </code></td>
+                                </tr>
+                                <tr>
+                                    <td>method ref.</td>
+                                    <td><code>ClassName::instanceMethod</code></td>
+                                    <td><code>String::length</code></td>
+
+                                </tr>
+
+                            </table>
+                        </li>
+                        <li>A method reference to an instance method of a specific object
+                            <table class="with_border">
+                                <tr>
+                                    <td>lambda</td>
+                                    <td><code>(args) -&gt; expr.instanceMethod(args)</code></td>
+                                    <td><code>
+                                        ThreadLocal&lt;Integer&gt; abc = ...; <br/>
+                                        x -&gt; abc.set(x);
+                                    </code></td>
+
+                                </tr>
+                                <tr>
+                                    <td>method ref.</td>
+                                    <td><code>expr::instanceMethod</code></td>
+                                    <td><code>abc::set</code></td>
+
+                                </tr>
+                            </table>
+                        </li>
+                    </ol>
+                </section>
+                <section>
+                    <h4>Constructor references</h4>
+                    <p>
+                        Syntax: <code>ClassName::new</code>
+
+                            <ul>
+                                <li>0 arg constructor:
+                                    <pre>
+                                        <code data-trim data-noescape>
+//Supplier&lt;Apple&gt; c1 = () -&gt; new Apple();
+Supplier&lt;Apple&gt; c1 = Apple::new;
+Apple newApple = c1.get();
+                                        </code>
+                                    </pre>
+                                </li>
+                                <li>1 arg constructor:
+                                    <pre>
+                                        <code data-trim data-noescape>
+//Function&lt;Integer,Apple&gt; f1 = (Integer x) -&gt; new Apple(x);
+Function&lt;Integer,Apple&gt; f1 = Apple::new;
+Apple newApple = f1.apply(123);
+                                        </code>
+                                    </pre>
+                                </li>
+                            </ul>
+
+
+                </section>
+            </section>
+<!-- STREAMS API -->
+            <section>
+                <h2>Streams API</h2>
+
+            </section>
+                <section>
+                    <section>
+                    <h4>Collection deficiencies</h4>
+                    <ul>
+                        <li>
+                            Much business logic entails database-like operations such as <i>grouping</i>,  <i>finding</i>
+                            element in the collection.
+                            <ul>
+                                <li>Java : loops</li>
+                                <li>DBs let us specify such operations declaratively <code>SELECT name,
+                                    MAX(calorie) from dishes</code></li>
+                                <li>We only express what we expect. </li>
+                                    <li>You need to worry less about
+                                how to explicitly implement such queries—it is handled for you</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Processing a large collection of elements
+                            <ul>
+                                <li>
+                                    To gain performance you would need to process it in parallel, and leverage multi-core architectures
+                                </li>
+                                <li>
+                                    Writing parallel code is very complicated in comparison to using simple loops
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Streams API</h4>
+                    <ul>
+                        <li>Lets you manipulate collections of data in a declarative way</li>
+                        <li>Streams can be processed in parallel transparently, without you having to write any
+                            multithreaded code!</li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Example</h4>
+                    Task: return the name of dishes that are low in calories,
+                    sorted by number of calories
+                    <h5>Java 7</h5>
+                    <pre>
+                        <code>
+List&lt;Dish&gt; lowCaloricDishes = new ArrayList&lt;&gt;();
+    for(Dish d: menu){
+        if(d.getCalories() &lt; 400){
+            lowCaloricDishes.add(d);
+        }
+    }
+
+List&lt;String&gt; lowCaloricDishesName = new ArrayList&lt;&gt;();
+Collections.sort(lowCaloricDishes, new Comparator&lt;Dish&gt;() {
+    public int compare(Dish d1, Dish d2){
+        return Integer.compare(d1.getCalories(), d2.getCalories());
+    }
+});
+
+for(Dish d: lowCaloricDishes){
+    lowCaloricDishesName.add(d.getName());
+}
+                        </code>
+                    </pre>
+
+                </section>
+                <section>
+                    <h4>Example</h4>
+                    <h5>Java 8</h5>
+                    <pre>
+                        <code>
+List&lt;String&gt; lowCaloricDishesName = dishes.stream()
+    .filter(d -&gt; d.getCalories() &lt; 400).sorted(comparing(Dish::getCalories))
+    .map(Dish::getName).collect(toList());
+
+                        </code>
+                    </pre>
+                    <h5>Java 8 parallel</h5>
+                    <pre>
+                        <code>
+List&lt;String&gt; lowCaloricDishesName = dishes.parallelStream()
+    .filter(d -&gt; d.getCalories() &lt; 400).sorted(comparing(Dishes::getCalories))
+    .map(Dish::getName).collect(toList());
+                        </code>
+                    </pre>
+                <ul>
+                    <li>declarative: more concise and readable</li>
+                    <li>composable: more flexibility</li>
+                    <li>parallelizable: more performance</li>
+                </ul>
+                </section>
+                <section>
+                    <h4>Streams - definition</h4>
+                    <blockquote>Stream: a sequence of elements from a source that supports aggregate operations</blockquote>
+                    <ul>
+                        <li>Sequence of elements: similar to collection, but collections are about data,
+                            streams are about computations</li>
+                        <li>Source: Streams consume from a data-providing source such as Collection,
+                            Arrays or IO resources</li>
+                        <li>Aggregate operations: Streams support SQL-like operations and common operations from
+                            functional programming lannguages: filter, map, reduce, find, match, sorted</li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Internal iteration</h4>
+                    <ul>
+                        <li>Collection use <b>external iteration</b>: iteration is done by the user (for loop)</li>
+                        <li>Streams use <b>internal iteration</b>: it does the iteration for you and takes care of storing the
+                            resulting stream value somewhere</li>
+                        <ul>
+                            <li>The internal iteration in the stream library can automatically choose  a data
+                                representation and implementation of parallelism to match your hardware</li>
+                        </ul>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Intermediate and terminal operation</h4>
+                    <pre>
+                        <code>
+List&lt;String&gt; names = menu.stream() 
+.filter(d -&gt; d.getCalories() &gt; 300) 
+.map(Dish::getName) 
+.limit(3) 
+.collect(toList()); 
+                        </code>
+                    </pre>
+                    <ul>
+                        <li>Intermediate operations: <code>filter, map, limit</code>
+                            <ul>
+                                <li>can be connected together to form a pipeline</li>
+                                <li>return Stream</li>
+                                <li>intermediate operations do not perform any processing until a terminal operation
+                                    is invoked - "lazy" & optimalization</li>
+
+                            </ul>
+                        </li>
+                        <li>Terminal operation: <code>collect</code>
+                            <ul>
+                                <li>causes the pipeline to be executed and
+                                    closes it</li>
+
+                                <li>exactly one terminal operation</li>
+
+                            </ul>
+                             </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>Laziness and short-circuting</h4>
+                    <pre>
+                        <code>
+private static List&lt;Dish&gt; menu = Arrays.asList(
+    new Dish(&quot;pork&quot;,false,800, Dish.Type.MEAT),
+    new Dish(&quot;beef&quot;, false, 700, Dish.Type.MEAT),
+    new Dish(&quot;chicken&quot;, false, 400, Dish.Type.MEAT),
+    new Dish(&quot;french fries&quot;, true, 530, Dish.Type.OTHER),
+    new Dish(&quot;rice&quot;,true, 350, Dish.Type.OTHER),
+    new Dish(&quot;season fruit&quot;, true, 120, Dish.Type.OTHER),
+    new Dish(&quot;pizza&quot;, true, 550, Dish.Type.OTHER),
+    new Dish(&quot;prawns&quot;,false, 300, Dish.Type.FISH),
+    new Dish(&quot;salmon&quot;,false, 450, Dish.Type.FISH)
+);
+                        </code>
+                    </pre>
+
+                </section>
+                <section>
+                    <h4>Laziness and short-circuting</h4>
+                    <pre>
+                        <code>
+List&lt;String&gt; names = menu.stream()
+    .filter(d -&gt; {System.out.println(&quot;filtering&quot; + d); return d.getCalories() &gt; 300;})
+    .map(d -&gt; {System.out.println(&quot;mapping&quot; + d);return d.getName();})
+    .limit(3).collect(toList());
+System.out.println(names);
+                        </code>
+                    </pre>
+
+                <pre class="fragment"><samp>filtering pork
+mapping pork
+filtering beef
+mapping beef
+filtering chicken
+mapping chicken
+[pork, beef, chicken]</samp></pre>
+                <p class="fragment">
+                We can notice several optimizations due to the laziness nature of streams. First, despite that
+                there are many dishes that have more calories than 300, only the first three are selected! This
+                is because of the limit operation and a technique called short-circuiting.
+                Secondly, despite that filter and map are two separate operation, they were "merged" into the same pass.
+
+                </p>
+                </section>
+
+			<section>
+				<h4>Streams operations</h4>
+				<ul>
+					<li>fitler</li>
+					<li>distinct</li>
+					<li>skip</li>
+					<li>limit</li>
+					<li>map</li>
+					<li>sorted</li>
+					<li>anyMatch</li>
+					<li>noneMatch</li>
+					<li>allMatch</li>
+					<li>findAny</li>
+					<li>findFirst</li>
+					<li>forEach</li>
+					<li>collect</li>
+					<li>reduce</li>
+					<li>count</li>
+				</ul>
+			</section>
+			<section>
+
+				<h4>Numeric streams</h4>
+			<p>Java 8 introduces 3 primitive specialized stream interfaces: <code>IntStream</code>, 
+<code>DoubleStream</code> and <code>LongStream</code></p>
+
+<pre><code>int calories = menu.stream()
+.map(Dish::getCalories).reduce(0, Integer::sum);</code></pre>
+
+<pre><code>//specialized stream
+int calories = menu.stream()
+.mapToInt(Dish::getCalories).sum();</code></pre>
+				
+				Specialized methods: <code>sum, min, max, average </code>...
+			</section>
+			<section>
+				<h4>Numeric ranges</h4>
+				<p>
+				<code>IntStream</code>, <code>DoubleStream</code> and <code>LongStream</code> introduce methods: <code>range</code> and <code>rangeClosed</code>
+				</p>
+<pre><code>
+IntStream evenNumbers = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0);
+</code></pre>
+			</section>
+			<section>
+				<h4>Building streams</h4>
+				<ol>
+					<li>From collections: <pre><code>dishes.stream()</code></pre></li>
+					<li>From values
+					<pre><code>Stream&lt;String&gt; stream = Stream.of("A","B","C"); </code></pre>
+					</li>
+					<li>From array
+					<pre>
+					<code>int[] numbers = {2, 3, 5, 7, 11, 13};
+int sum = Arrays.stream(numbers).sum();	</code></pre>
+					</li>
+					<li>From a file</li>
+<pre><code>long uniqueWords = 
+	Files.lines(Paths.get("data.txt"), Charset.defaultCharset())
+	.flatMap(line -> Arrays.stream(line.split(" ")))
+	.distinct().count();
+</code></pre>
+		</section>
+		<section>
+			<h4>Building streams</h4>
+				<ol start="5">
+					<li>From a function: creating infinite streams!!!
+					<pre><code>
+Stream.iterate(0, n -> n + 2)
+	.limit(10)
+	.forEach(System.out::println);
+</pre></code>
+<pre><code>Stream.generate(Math::random)
+	.limit(5)
+	.forEach(System.out::println);
+
+</code></pre>
+					</li>
+				</ol>
+
+				
+			</section>
+		</section>
+<!-- END of STREAMS API -->
+
+                <section>
+                    <section>
+                        <h4>Default methods</h4>
+                        <p>In Java 8 interfaces can declare methods with implementation code
+                            <ul>
+                                <li>static methods</li>
+                                <li>default methods - default implementation for methods in an interface</li>
+                            </ul>
+
+                        <pre>
+                            <code data-trim data-noescape>
+public interface MyInterface {
+    static void staticMethod() {
+        System.out.println(&quot;implementation of static method&quot;);
+    }
+
+    <b>default</b> void instanceMethod() {
+        System.out.println(&quot;instance method&quot;);
+    }
+}
+
+                            </code>
+                        </pre>
+                        </p>
+
+
+                    </section>
+
+                    <section>
+                        <h4>Abstract classes vs interfaces in Java 8</h4>
+
+                        <ul>
+                            <li>both contain abstract methods and methods with body</li>
+                            <li>class can extend only from one abstract class</li>
+                            <li>class can implement multiple interfaces</li>
+                            <li>abstract class can enforce a common state through instance variables(fields). An
+                                interface cannot have instance variables</li>
+                        </ul>
+
+
+                    </section>
+                    <section>
+                        <h4>Usage patterns for default methods</h4>
+                        <ol>
+                            <li>Useful to evolve a library in a compatible way (List.sort)</li>
+                            <li>Many of the <b>functional</b> interfaces introduces default methods (Predicate.and
+                                ())</li>
+                            <li>Optional methods
+                            <pre>
+                                <code>
+public interface Iterator&lt;E&gt; {
+    boolean hasNext();
+    E next();
+    default void remove() {
+    throw new UnsupportedOperationException(&quot;remove&quot;);
+    }
+}
+                                </code>
+                            </pre>
+                            <code>remove</code> method often ignored, empty implementation results in
+                                unnecessary boilerplate code
+                            </li>
+                            <li>Multiple inheritance of behavior</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h4>Resolution rules</h4>
+                        <p>
+                            Java 8 there is the possibility of a class inheriting more than one method with the same
+                            signature.
+
+                            <ol>
+                                  <li>  Classes always win. A method declaration in the class or a superclass takes priority
+                                    over any default method declaration </li>
+                            <li>Otherwise, the method with the same signature in the most specific default-providing
+                            interface is selected. (If B extends A, B is more specific than A) </li>
+                            <li>Finally, if the choice is still ambiguous the class inheriting from multiple interfaces can
+                            choose to explicitly select which default method implementation by overriding it and
+                            calling the desired method explicitly.
+                        </li>
+                            </ol>
+
+                        </p>
+                    </section>
+                    <section>
+                        <h4>Explicit resolution</h4>
+                        <pre>
+                            <code>
+public interface A {
+    default void hello() {
+        System.out.println(&quot;Hello from A&quot;);
+    }
+}
+
+public interface B {
+    default void hello() {
+        System.out.println(&quot;Hello from B&quot;);
+    }
+}
+
+
+public class C implements B, A {
+    void hello() {
+        B.super.hello()
+    }
+}
+
+                            </code>
+                        </pre>
+                    </section>
+                </section>
+            <section>
+                <h4>Bibliography</h4>
+                <div class="biblio">
+                    <ul>
+                        <li><img src="img/java8inAction.jpg"/>Java 8 in Action</li>
+                        <li><img src="img/functProgInJava.jpg"/>Functional Programming in Java (By Venkat
+                            Subramaniam)</li>
+                        <li><a href="http://www.oracle.com/events/us/en/java8/index.html">
+                            http://www.oracle.com/events/us/en/java8/index.html - videos</a> </li>
+                        <li><a href="http://docs.oracle.com/javase/8/">http://docs.oracle.com/javase/8/</a> - docu</li>
+                        <li><a
+                                href="http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html">http://www.javacodegeeks.com/2014/05/java-8-features-tutorial.html</a> - tutorial</li>
+                    </ul>
+                </div>
+
+            </section>
+
+            <section>
+                <h2>Questions?</h2>
+            </section>
+            <section>
+                <h2>Thank you!</h2>
+            </section>
+
+            </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				//center: false,
+				width: 1400,
+				height: 800,
+                slideNumber: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

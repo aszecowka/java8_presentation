@@ -1,0 +1,66 @@
+.wazne {
+	color: red;
+}
+
+.wazne_kod {
+    background-color: black;
+}
+
+table.pict_lambda_syntax
+{
+    margin-left: 40px;
+    margin-right: 40px;
+    border-spacing: 10px;
+}
+
+table.pict_lambda_syntax td
+{
+    text-align: center;
+
+}
+
+table.pict_lambda_syntax td.desc1
+{
+    border-top: 3px green solid;
+
+}
+
+table.pict_lambda_syntax td.desc2
+{
+    border-top: 3px yellow solid;
+}
+
+table.pict_lambda_syntax td.desc3
+{
+    border-top: 3px red solid;
+}
+
+h4 code
+{
+    text-transform: none;
+}
+
+table.with_border td
+{
+    border: 1px solid white;
+}
+
+div.biblio img
+{
+    width: 150px;
+    height: auto;
+}
+
+div.biblio ul li > img
+{
+    line-height: 200px;
+
+}
+
+div.biblio ul li img {
+    vertical-align: middle;
+}
+
+.reveal pre code {
+    font-size: 1.3em;
+}
