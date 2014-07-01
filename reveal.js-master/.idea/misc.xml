@@ -3,6 +3,12 @@
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
   </component>
+  <component name="EclipseCodeFormatter">
+    <option name="defaultSettings" value="true" />
+    <option name="id" value="1399898959360" />
+    <option name="name" value="default" />
+  </component>
+  <component name="IdProvider" IDEtalkID="ECA030A5B0695A0AD1FED4C365414881" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />

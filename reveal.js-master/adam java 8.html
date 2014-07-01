@@ -57,22 +57,24 @@
 				<section>
 					<h2>What is new in Java 8</h2>
 					<ul>
-						<li>lambda expressions <span class="wazne">*</span></li>
-						<li>method references  <span class="wazne">*</span></li>
-						<li>Streams API  <span class="wazne">*</span></li>
-						<li>default methods  <span class="wazne">*</span></li>
-						<li>Optional</li>
-						<li>New Date and Time API</li>
+						<li>lambda expressions</li>
+						<li>method references</li>
+						<li>Streams API</li>
+						<li>default methods</li>
+                        <div class="fragment shrink">
+                            <li>Optional</li>
+                            <li>New Date and Time API</li>
+                        </div>
 					</ul>
 				</section>
                 <section>
-                    <h4>Behaviour parametrization prior to Java 8</h4>
+                    <h2>Behaviour parametrization prior to Java 8</h2>
                 </section>
 				<section>
 
 
 					<section>
-					<h5>Filter by color</h5>
+					<h3>Filter by color</h3>
 					<pre>
 					<code data-trim data-noescape class="html">
 					       public static List&lt;Apple&gt; filterApplesByColour(List&lt;Apple&gt; inventory, String color) {
@@ -87,7 +89,7 @@
 						
 					</code>	
 					</pre>
-					<h5>Filter by weight</h5>
+					<h3>Filter by weight</h3>
 					<pre>
 						<code data-trim data-noescape>
 						    public static List&lt;Apple&gt; filterApplesByWeight(List&lt;Apple&gt; inventory, int weight) {
@@ -103,7 +105,7 @@
 					</pre>
 					</section>
 					<section>
-					<h5>Lets introduce interface</h5>
+					<h3>Lets introduce interface</h3>
 					<pre>
 						<code data-trim data-noescape>
 						    public interface ApplePredicate{
@@ -125,7 +127,7 @@
 					</pre>
 					</section>
 					<section>
-						<h5>And refactor filter method</h5>
+						<h3>And refactor filter method</h3>
 						<pre>
 						<code data-trim data-noescape>
 						    public static List&lt;Apple&gt; filterApples(List&lt;Apple&gt; inventory, ApplePredicate p) {
@@ -141,7 +143,7 @@
 						</pre>
 					</section>
 					<section>
-						<h5>Usages</h5>
+						<h3>Usages</h3>
 						<pre>
 						<code data-trim data-noescape>
 						    public static void main(String[] args) {
@@ -163,18 +165,19 @@
 					</section>
 				</section>
 				<section>
-					<h4>Behaviour parametrization in Java 8</h4>
-                    <h5>Lambda expression</h5>
+					<h3>Behaviour parametrization in Java 8</h3>
+                    <h3>Lambda expression</h3>
 					<pre>
 						<code data-trim data-noescape>
 					        List&lt;Apple&gt; result =
-                filterApples(inventory, (Apple apple) -&gt; &quot;red&quot;.equals(apple.getColor()));
+    filterApples(inventory, (Apple apple) -&gt;
+        &quot;red&quot;.equals(apple.getColor()));
 					</code></pre>
 					<p>and could be even conciser... </p>
 				</section>
 				<section>
-					<h4>Behaviour parametrization in Java 8</h4>
-					<h5>Another real-world example</h5>
+					<h3>Behaviour parametrization in Java 8</h3>
+					<h4>Another real-world example</h4>
 					before
 							<pre>
 							<code data-trim data-noescape>inventory.sort(new Comparator&lt;Apple&gt;() {
@@ -194,7 +197,7 @@
 
 				</section>
 				<section>
-					<h4>Lambda expression -theory</h4>
+					<h3>Lambda expression -theory</h3>
 					<p>
 					<ul>
 						<li>a kind of anonymous function</li>
@@ -211,7 +214,7 @@
 					</p>
 				</section>
 				<section>
-					<h4>Syntax of lambda</h4>
+					<h3>Syntax of lambda</h3>
 
 
                     <table class="pict_lambda_syntax">
@@ -264,7 +267,7 @@
 
 				</section>
                 <section>
-                    <h4>Functional interface</h4>
+                    <h3>Functional interface</h3>
                     <ul>
                         <li>The type of a lambda expression is essentially a functional interface</li>
                         <li>A functional interface is an interface that specifies exactly one (abstract) method
@@ -278,7 +281,7 @@
                     </ul>
                 </section>
                 <section>
-                    <h4>What about <code>@FunctionalInterface</code>?</h4>
+                    <h3>What about <code>@FunctionalInterface</code>?</h3>
                     <ul>
                         <li>indicate the interface is intended to be a functional
                             interface.
@@ -296,7 +299,7 @@
 
             <section>
                 <section>
-                    <h4><code>java.util.function</code> package</h4>
+                    <h3><code>java.util.function</code> package</h3>
 
                     <p>We don't have to create own ApplePredicate</p>
 
@@ -311,8 +314,8 @@ public interface ApplePredicate{
                         them :)</p>
                 </section>
                 <section>
-                    <h4><code>java.util.function</code> package</h4>
-                    <h5>Predicate</h5>
+                    <h3><code>java.util.function</code> package</h3>
+                    <h4>Predicate</h4>
                     <pre>
                         <code data-trim data-noescape>
 @FunctionalInterface
@@ -331,8 +334,8 @@ public interface Predicate&lt;T&gt; {
                     </pre>
                 </section>
                 <section>
-                    <h4><code>java.util.function</code> package</h4>
-                    <h5>Consumer</h5>
+                    <h3><code>java.util.function</code> package</h3>
+                    <h4>Consumer</h4>
                     <pre>
                         <code  data-trim data-noescape>
 @FunctionalInterface
@@ -350,8 +353,8 @@ public interface Consumer&lt;T&gt; {
                     </pre>
                 </section>
                 <section>
-                    <h4><code>java.util.function</code> package</h4>
-                    <h5>Function</h5>
+                    <h3><code>java.util.function</code> package</h3>
+                    <h4>Function</h4>
                     <pre>
                         <code data-trim data-noescape>
 @FunctionalInterface
@@ -370,8 +373,8 @@ public interface Function&lt;T, R&gt; {
                     </pre>
                 </section>
                 <section>
-                    <h4><code>java.util.function</code> package</h4>
-                    <h5>Primitive specialization</h5>
+                    <h3><code>java.util.function</code> package</h3>
+                    <h4>Primitive specialization</h4>
                     <ul><li>Why? - Performance</li></ul>
                     <br/>
 
@@ -399,7 +402,7 @@ public interface Function&lt;T, R&gt; {
             </section>
             <section>
                 <section>
-                    <h4>Method references</h4>
+                    <h3>Method references</h3>
                     Lambda:
                     <pre>
                         <code>
@@ -421,7 +424,7 @@ filterApples(inventory, Apple::isOrganic);
                     </ul>
                 </section>
                 <section>
-                    <h4>Method reference - another example</h4>
+                    <h3>Method reference - another example</h3>
                     Lambda:
                 <pre>
                     <code data-trim data-noescape>
@@ -438,7 +441,7 @@ filterApples(inventory, Apple::isOrganic);
 
                 </section>
                 <section>
-                    <h4>Method references</h4>
+                    <h3>Method references</h3>
                     <ol>
                         <li>A method reference to a static method
                             <table class="with_border">
@@ -492,7 +495,7 @@ filterApples(inventory, Apple::isOrganic);
                     </ol>
                 </section>
                 <section>
-                    <h4>Constructor references</h4>
+                    <h3>Constructor references</h3>
                     <p>
                         Syntax: <code>ClassName::new</code>
 
@@ -509,7 +512,8 @@ Apple newApple = c1.get();
                                 <li>1 arg constructor:
                                     <pre>
                                         <code data-trim data-noescape>
-//Function&lt;Integer,Apple&gt; f1 = (Integer x) -&gt; new Apple(x);
+//Function&lt;Integer,Apple&gt; f1 =
+//(Integer x) -&gt; new Apple(x);
 Function&lt;Integer,Apple&gt; f1 = Apple::new;
 Apple newApple = f1.apply(123);
                                         </code>
@@ -527,7 +531,7 @@ Apple newApple = f1.apply(123);
             </section>
                 <section>
                     <section>
-                    <h4>Collection deficiencies</h4>
+                    <h3>Collection deficiencies</h3>
                     <ul>
                         <li>
                             Much business logic entails database-like operations such as <i>grouping</i>,  <i>finding</i>
@@ -555,7 +559,7 @@ Apple newApple = f1.apply(123);
                     </ul>
                 </section>
                 <section>
-                    <h4>Streams API</h4>
+                    <h3>Streams API</h3>
                     <ul>
                         <li>Lets you manipulate collections of data in a declarative way</li>
                         <li>Streams can be processed in parallel transparently, without you having to write any
@@ -563,10 +567,10 @@ Apple newApple = f1.apply(123);
                     </ul>
                 </section>
                 <section>
-                    <h4>Example</h4>
+                    <h3>Example</h3>
                     Task: return the name of dishes that are low in calories,
                     sorted by number of calories
-                    <h5>Java 7</h5>
+                    <h4>Java 7</h4>
                     <pre>
                         <code>
 List&lt;Dish&gt; lowCaloricDishes = new ArrayList&lt;&gt;();
@@ -591,8 +595,8 @@ for(Dish d: lowCaloricDishes){
 
                 </section>
                 <section>
-                    <h4>Example</h4>
-                    <h5>Java 8</h5>
+                    <h3>Example</h3>
+                    <h4>Java 8</h4>
                     <pre>
                         <code>
 List&lt;String&gt; lowCaloricDishesName = dishes.stream()
@@ -601,7 +605,7 @@ List&lt;String&gt; lowCaloricDishesName = dishes.stream()
 
                         </code>
                     </pre>
-                    <h5>Java 8 parallel</h5>
+                    <h4>Java 8 parallel</h4>
                     <pre>
                         <code>
 List&lt;String&gt; lowCaloricDishesName = dishes.parallelStream()
@@ -616,7 +620,7 @@ List&lt;String&gt; lowCaloricDishesName = dishes.parallelStream()
                 </ul>
                 </section>
                 <section>
-                    <h4>Streams - definition</h4>
+                    <h3>Streams - definition</h3>
                     <blockquote>Stream: a sequence of elements from a source that supports aggregate operations</blockquote>
                     <ul>
                         <li>Sequence of elements: similar to collection, but collections are about data,
@@ -628,7 +632,7 @@ List&lt;String&gt; lowCaloricDishesName = dishes.parallelStream()
                     </ul>
                 </section>
                 <section>
-                    <h4>Internal iteration</h4>
+                    <h3>Internal iteration</h3>
                     <ul>
                         <li>Collection use <b>external iteration</b>: iteration is done by the user (for loop)</li>
                         <li>Streams use <b>internal iteration</b>: it does the iteration for you and takes care of storing the
@@ -640,7 +644,7 @@ List&lt;String&gt; lowCaloricDishesName = dishes.parallelStream()
                     </ul>
                 </section>
                 <section>
-                    <h4>Intermediate and terminal operation</h4>
+                    <h3>Intermediate and terminal operation</h3>
                     <pre>
                         <code>
 List&lt;String&gt; names = menu.stream() 
@@ -672,7 +676,7 @@ List&lt;String&gt; names = menu.stream()
                     </ul>
                 </section>
                 <section>
-                    <h4>Laziness and short-circuting</h4>
+                    <h3>Laziness and short-circuting</h3>
                     <pre>
                         <code>
 private static List&lt;Dish&gt; menu = Arrays.asList(
@@ -691,7 +695,7 @@ private static List&lt;Dish&gt; menu = Arrays.asList(
 
                 </section>
                 <section>
-                    <h4>Laziness and short-circuting</h4>
+                    <h3>Laziness and short-circuting</h3>
                     <pre>
                         <code>
 List&lt;String&gt; names = menu.stream()
@@ -719,7 +723,7 @@ mapping chicken
                 </section>
 
 			<section>
-				<h4>Streams operations</h4>
+				<h3>Streams operations</h3>
 				<ul>
 					<li>fitler</li>
 					<li>distinct</li>
@@ -740,7 +744,7 @@ mapping chicken
 			</section>
 			<section>
 
-				<h4>Numeric streams</h4>
+				<h3>Numeric streams</h3>
 			<p>Java 8 introduces 3 primitive specialized stream interfaces: <code>IntStream</code>, 
 <code>DoubleStream</code> and <code>LongStream</code></p>
 
@@ -754,7 +758,7 @@ int calories = menu.stream()
 				Specialized methods: <code>sum, min, max, average </code>...
 			</section>
 			<section>
-				<h4>Numeric ranges</h4>
+				<h3>Numeric ranges</h3>
 				<p>
 				<code>IntStream</code>, <code>DoubleStream</code> and <code>LongStream</code> introduce methods: <code>range</code> and <code>rangeClosed</code>
 				</p>
@@ -763,7 +767,7 @@ IntStream evenNumbers = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0);
 </code></pre>
 			</section>
 			<section>
-				<h4>Building streams</h4>
+				<h3>Building streams</h3>
 				<ol>
 					<li>From collections: <pre><code>dishes.stream()</code></pre></li>
 					<li>From values
@@ -775,14 +779,15 @@ IntStream evenNumbers = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0);
 int sum = Arrays.stream(numbers).sum();	</code></pre>
 					</li>
 					<li>From a file</li>
-<pre><code>long uniqueWords = 
-	Files.lines(Paths.get("data.txt"), Charset.defaultCharset())
-	.flatMap(line -> Arrays.stream(line.split(" ")))
-	.distinct().count();
+<pre><code data-trim data-noescape>long uniqueWords =
+Files.lines(Paths.get("data.txt"), Charset.defaultCharset())
+    .flatMap(line -> Arrays.stream(line.split(" ")))
+    .distinct().count();
 </code></pre>
+        </ol>
 		</section>
 		<section>
-			<h4>Building streams</h4>
+			<h3>Building streams</h3>
 				<ol start="5">
 					<li>From a function: creating infinite streams!!!
 					<pre><code>
@@ -805,7 +810,7 @@ Stream.iterate(0, n -> n + 2)
 
                 <section>
                     <section>
-                        <h4>Default methods</h4>
+                        <h3>Default methods</h3>
                         <p>In Java 8 interfaces can declare methods with implementation code
                             <ul>
                                 <li>static methods</li>
@@ -832,7 +837,7 @@ public interface MyInterface {
                     </section>
 
                     <section>
-                        <h4>Abstract classes vs interfaces in Java 8</h4>
+                        <h3>Abstract classes vs interfaces in Java 8</h3>
 
                         <ul>
                             <li>both contain abstract methods and methods with body</li>
@@ -845,7 +850,7 @@ public interface MyInterface {
 
                     </section>
                     <section>
-                        <h4>Usage patterns for default methods</h4>
+                        <h3>Usage patterns for default methods</h3>
                         <ol>
                             <li>Useful to evolve a library in a compatible way (List.sort)</li>
                             <li>Many of the <b>functional</b> interfaces introduces default methods (Predicate.and
@@ -869,7 +874,7 @@ public interface Iterator&lt;E&gt; {
                         </ol>
                     </section>
                     <section>
-                        <h4>Resolution rules</h4>
+                        <h3>Resolution rules</h3>
                         <p>
                             Java 8 there is the possibility of a class inheriting more than one method with the same
                             signature.
@@ -888,7 +893,7 @@ public interface Iterator&lt;E&gt; {
                         </p>
                     </section>
                     <section>
-                        <h4>Explicit resolution</h4>
+                        <h3>Explicit resolution</h3>
                         <pre>
                             <code>
 public interface A {
@@ -915,7 +920,7 @@ public class C implements B, A {
                     </section>
                 </section>
             <section>
-                <h4>Bibliography</h4>
+                <h3>Bibliography</h3>
                 <div class="biblio">
                     <ul>
                         <li><img src="img/java8inAction.jpg"/>Java 8 in Action</li>

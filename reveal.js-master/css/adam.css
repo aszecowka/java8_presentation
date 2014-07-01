@@ -35,7 +35,7 @@ table.pict_lambda_syntax td.desc3
     border-top: 3px red solid;
 }
 
-h4 code
+h4 code, h1 code, h2 code, h3 code, h5 code, h6 code
 {
     text-transform: none;
 }
@@ -63,4 +63,16 @@ div.biblio ul li img {
 
 .reveal pre code {
     font-size: 1.3em;
+}
+
+.reveal pre {
+    width: 100%;
+}
+
+.reveal pre code {
+    max-height: 500px;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6  {
+    color: #93a1a1;
 }
