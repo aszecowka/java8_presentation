@@ -42,7 +42,7 @@ h4 code, h1 code, h2 code, h3 code, h5 code, h6 code
 
 table.with_border td
 {
-    border: 1px solid white;
+    border: 2px solid white;
 }
 
 div.biblio img
@@ -76,3 +76,4 @@ div.biblio ul li img {
 .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6  {
     color: #93a1a1;
 }
+

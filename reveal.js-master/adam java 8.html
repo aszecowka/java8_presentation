@@ -15,9 +15,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/adam.css">
-		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
 		
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+		<link rel="stylesheet" href="css/adam.css">
 
 		<!-- For syntax highlighting -->
 
@@ -417,8 +417,8 @@ filterApples(inventory, Apple::isOrganic);
                         </code>
                     </pre>
                     <ul>
-                        <li>Method references can be seen as a syntactic sugar for lambdas that refer only to a single
-                            method because you have to write less to express the same thing</li>
+                        <li>Syntactic sugar for lambdas that refer only to a single
+                            method</li>
                         <li>In some cases they can look more readable and feel more natural than using lambda
                             expressions</li>
                     </ul>
@@ -473,7 +473,13 @@ filterApples(inventory, Apple::isOrganic);
 
                             </table>
                         </li>
-                        <li>A method reference to an instance method of a specific object
+
+                    </ol>
+                </section>
+				<section>
+				 <h3>Method references</h3>
+                    <ol start="3">
+					    <li>A method reference to an instance method of a specific object
                             <table class="with_border">
                                 <tr>
                                     <td>lambda</td>
@@ -492,8 +498,8 @@ filterApples(inventory, Apple::isOrganic);
                                 </tr>
                             </table>
                         </li>
-                    </ol>
-                </section>
+					</ol>
+				</section>
                 <section>
                     <h3>Constructor references</h3>
                     <p>
@@ -725,7 +731,7 @@ mapping chicken
 			<section>
 				<h3>Streams operations</h3>
 				<ul>
-					<li>fitler</li>
+					<li>filter</li>
 					<li>distinct</li>
 					<li>skip</li>
 					<li>limit</li>
